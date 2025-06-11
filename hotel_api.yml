@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: Hotel Booking API
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: API base URL
+
+paths:
+  /users:
+    get:
+      operationId: api.get_users
+      summary: Get all usernames
+      responses:
+        200:
+          description: List of usernames
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+
+  /bookings:
+    get:
+      operationId: api.get_bookings
+      summary: Get all bookings
+      responses:
+        200:
+          description: List of bookings
+    post:
+      operationId: api.create_booking
+      summary: Create new booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - people
+                - room_type
+                - start_date
+                - end_date
+                - park
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                surname_booking:
+                  type: string
+                numb_people:
+                  type: integer
+                room_id:
+                  type: string
+                check_in:
+                  type: string
+                  format: date
+                check_out:
+                  type: string
+                  format: date
+                price:
+                  type: number
+      responses:
+        201:
+          description: Booking created
+
+  /login:
+    post:
+      operationId: api.login
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Login successful
+        401:
+          description: Invalid credentials
+
+  /register:
+    post:
+      operationId: api.register
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: Registration successful
+        400:
+          description: Registration failed

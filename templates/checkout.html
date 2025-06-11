@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDM Hotel - Checkout</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- navigation bar with updated login text -->
+    <nav class="nav-bar">
+        <button id="logoutBtn" class="nav-button" onclick="handleLogout()">Logout</button>
+    </nav>
+
+    <!-- Checkout container -->
+    <div class="container">
+        <h1>Checkout</h1>
+        <div id="checkoutContent" class="checkoutContent">
+            <form action="{{ url_for('checkout') }}" method="POST" oninput="calculateTotal()">
+                <label for="park">Park:</label>
+                <select id="park" name="park" required>
+                    <option value="Venlo">Netherlands, Venlo</option>
+                    <option value="Berlin">Germany, Berlin</option>
+                    <option value="Brussels">Belgium, Brussels</option>
+                </select>
+
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{name}}" required>
+        
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{email}}" required>
+        
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+        
+                <label for="people">Number of People:</label>
+                <input type="number" id="people" name="people" min="1" required>
+
+                <label for="duration">Duration of stay (days):</label>
+                <input type="number" id="duration" name="duration" required>
+
+                <label for="roomType">Room Type(s):</label>
+                <select id="roomType" name="roomType" required>
+                    <option value="single" data-cost="50">Single (50$ per person per night)</option>
+                    <option value="double" data-cost="60">Double (60$ per person per night)</option>
+                    <option value="suite" data-cost="65">Suite (65$ per person per night)</option>
+                </select>
+                
+                <strong>Sum of booking costs:</strong>
+                <div>
+                    <p>Amount of people: <span id="displayPeople">0</span></p>
+                    <p>Amount of days: <span id="displayDuration">0</span></p>
+                    <p>Room cost per person per night: <span id="displayRoomCost">0</span></p>
+                    <p><strong>Total: <span id="totalCost">0</span> $</strong></p>
+                </div>
+
+                <!-- 
+                {% if selected_option == 'accommodation' %}
+                <label for="duration">Number of days:</label>
+                <input type="number" id="duration" name="duration">
+                <label for="room-type">Room Type:</label>
+                <select id="room-type" name="room-type" required>
+                    <option value="single">Single</option>
+                    <option value="double">Double</option>
+                    <option value="suite">Suite</option>
+                </select>
+                {% elif selected_option == 'restaurant' %}
+                <label for="special-requests">Special Requests:</label>
+                <textarea id="special-requests" name="special-requests"></textarea>
+                {% elif selected_option == 'bowling' %}
+                <label for="bowling-lane">Bowling Lane:</label>
+                <select id="bowling-lane" name="bowling-lane" required>
+                    <option value="standard">Standard</option>
+                    <option value="premium">Premium</option>
+                </select>
+                {% endif %} 
+                -->
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login check script -->
+    <script>
+        // Check login status when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            // Redirect to login if not logged in
+            if (!isLoggedIn) {
+                window.location.href = '/login';
+                return;
+            }
+
+            // Set minimum dates for check-in which is today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('checkIn').min = today;
+
+            // Add event listener for check-in date changes
+            document.getElementById('checkIn').addEventListener('change', function() {
+                const checkOutInput = document.getElementById('checkOut');
+                const nextDay = new Date(this.value);
+                nextDay.setDate(nextDay.getDate() + 1);
+                const nextDayStr = nextDay.toISOString().split('T')[0];
+                
+                checkOutInput.min = nextDayStr;
+                if (!checkOutInput.value || checkOutInput.value <= this.value) {
+                    checkOutInput.value = nextDayStr;
+                }
+            });
+
+            // Trigger change event to set initial checkout minimum
+            const checkInInput = document.getElementById('checkIn');
+            if (checkInInput.value) {
+                checkInInput.dispatchEvent(new Event('change'));
+            }
+
+            // Display room details
+            const roomType = localStorage.getItem('selectedRoom');
+            const roomDetails = getRoomDetails(roomType);
+            document.getElementById('roomDetails').innerHTML = `
+                <h2>${roomDetails.name}</h2>
+                <p>Price per night: $${roomDetails.price}</p>
+                <p>Maximum people: ${roomDetails.maxPeople}</p>
+            `;
+
+            // Set max people validation
+            document.getElementById('numPeople').max = roomDetails.maxPeople;
+            document.getElementById('maxPeopleWarning').textContent = 
+                `Maximum ${roomDetails.maxPeople} people allowed`;
+        });
+
+        function getRoomDetails(type) {
+            const rooms = {
+                'standard': { name: 'Standard Room', price: 100, maxPeople: 2 },
+                'deluxe': { name: 'Deluxe Room', price: 150, maxPeople: 3 },
+                'suite': { name: 'Suite', price: 200, maxPeople: 4 }
+            };
+            return rooms[type] || rooms['standard'];
+        }
+
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const bookingData = {
+                username: localStorage.getItem('username'),
+                email: document.getElementById('email').value,
+                surname_booking: document.getElementById('surname').value,
+                numb_people: parseInt(document.getElementById('numPeople').value),
+                room_id: localStorage.getItem('selectedRoom'),
+                check_in: document.getElementById('checkIn').value,
+                check_out: document.getElementById('checkOut').value,
+                price: getRoomDetails(localStorage.getItem('selectedRoom')).price
+            };
+
+            try {
+                const response = await fetch('/api/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                });
+
+                if (response.ok) {
+                    alert('Booking successful!');
+                    window.location.href = '/';
+                } else {
+                    const error = await response.json();
+                    alert(`Booking failed: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+
+        // Handles user logout
+        function handleLogout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            window.location.href = '/';
+        }
+        
+        function calculateTotal() {
+            const people = parseInt(document.getElementById('people').value) || 0;
+            const duration = parseInt(document.getElementById('duration').value) || 0;
+            const roomType = document.getElementById('roomType');
+            const roomCost = parseInt(roomType.options[roomType.selectedIndex].getAttribute('data-cost')) || 0;
+
+            document.getElementById('displayPeople').innerText = people;
+            document.getElementById('displayDuration').innerText = duration;
+            document.getElementById('displayRoomCost').innerText = roomCost;
+
+            const total = people * duration * roomCost;
+            document.getElementById('totalCost').innerText = total;
+        }
+        
+        document.addEventListener('DOMContentLoaded', calculateTotal);
+
+    </script>
+</body>
+</html>

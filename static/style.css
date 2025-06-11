@@ -1,0 +1,402 @@
+body { 
+    font-family: Arial, sans-serif; 
+    max-width: 800px; 
+    margin: 0 auto; 
+    padding: 20px;
+    background-color: #f5f5f5;
+    padding-top: 60px;
+}
+
+.container { 
+    margin-top: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-group { 
+    margin: 10px 0; 
+}
+
+input, button, select { 
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.error { 
+    color: #f44336;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+.success { 
+    color: #4CAF50;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+a {
+    color: #2196F3;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+}
+
+.tab-button.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.tab-content {
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Navigation Bar Styles */
+.nav-bar {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    z-index: 1000;
+}
+
+.nav-button {
+    padding: 0.5rem 1rem;
+    border: 1px solid white;
+    border-radius: 4px;
+    color: white;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.nav-button:hover {
+    background-color: white;
+    color: black;
+}
+
+/* Homepage Styles */
+.homepage {
+    background: url('/static/homepage_img.webp') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 0;
+}
+
+.hero-content {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    border-radius: 10px;
+    color: white;
+}
+
+.book-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    transition: background-color 0.3s;
+}
+
+.book-button:hover {
+    background-color: #45a049;
+    text-decoration: none;
+}
+
+/* Rooms Page Styles */
+.rooms-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.room-box {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.room-box:hover {
+    transform: translateY(-5px);
+}
+
+.room-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.room-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.room-info {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.room-info h2 {
+    margin: 0 0 1rem 0;
+}
+
+.price {
+    font-size: 1.25rem;
+    color: #4CAF50;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+/* Login/Register Form Styles */
+.auth-tabs {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    background: #f0f0f0;
+    border: none;
+}
+
+.auth-tab.active {
+    background: #4CAF50;
+    color: white;
+}
+
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+/* Checkout Page Styles */
+#roomDetails {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid #e9ecef;
+}
+
+#roomDetails h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+#roomDetails p {
+    color: #6c757d;
+    margin: 8px 0;
+}
+
+#bookingForm {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#bookingForm .form-group {
+    margin-bottom: 20px;
+}
+
+#bookingForm label {
+    display: block;
+    margin-bottom: 8px;
+    color: #495057;
+    font-weight: bold;
+}
+
+#bookingForm input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#bookingForm input:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.25);
+}
+
+#maxPeopleWarning {
+    display: block;
+    color: #856404;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+#bookingForm button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#bookingForm button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Remove or comment out these overriding rules */
+/* #loginForm { display: block; } */
+/* #registerForm { display: none; } */
+        
+.auth-tab.active {
+    background: #4CAF50;
+    color: white;
+}
+
+/* checkout */
+.checkoutContent {
+    width: 400px;
+    margin: 0 auto;
+    margin-top: 2.5%;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #333;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .checkoutContent h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .checkoutContent label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .checkoutContent input[type="text"],
+  .checkoutContent input[type="email"],
+  .checkoutContent input[type="date"],
+  .checkoutContent input[type="time"],
+  .checkoutContent input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  
+  .checkoutContent select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+    appearance: menulist;
+  }
+  
+  .checkoutContent textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+    resize: vertical;
+  }
+  
+  .checkoutContent button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #2e7d32;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .checkoutContent button[type="submit"]:hover {
+    background-color: #1b5e20;
+  }

@@ -1,0 +1,24 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Install sqlite3 command line tool
+RUN apt-get update && apt-get install -y sqlite3 && apt-get clean
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy database files
+COPY create_db.py config.py hotel.ini ./
+
+# Create data directory
+RUN mkdir -p /app/data
+
+# Set environment variables
+ENV DATABASE_NAME=/app/data/hotel.db
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Initialize database and keep container running
+CMD ["bash", "-c", "python create_db.py && touch /app/data/db_ready && echo 'Database initialized successfully!' && tail -f /dev/null"]

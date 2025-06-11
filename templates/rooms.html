@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDM Hotel - Rooms</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="nav-bar">
+        <button id="loginBtn" class="nav-button" onclick="handleLogin()">Login/Register</button>
+        <button id="logoutBtn" class="nav-button" onclick="handleLogout()" style="display: none;">Logout</button>
+    </nav>
+
+    <div class="rooms-container">
+        <h1>Our Rooms</h1>
+        <div class="room-grid">
+            <div class="room-box">
+                <div class="room-image">
+                    <img src="/static/room1.jpg" alt="Standard Room">
+                </div>
+                <div class="room-info">
+                    <h2>Standard Room</h2>
+                    <p>Max People: 2</p>
+                    <p class="price">$100/night</p>
+                    <button onclick="bookRoom('standard')">Book Now</button>
+                </div>
+            </div>
+
+            <div class="room-box">
+                <div class="room-image">
+                    <img src="/static/room2.jpg" alt="Deluxe Room">
+                </div>
+                <div class="room-info">
+                    <h2>Deluxe Room</h2>
+                    <p>Max People: 3</p>
+                    <p class="price">$150/night</p>
+                    <button onclick="bookRoom('deluxe')">Book Now</button>
+                </div>
+            </div>
+
+            <div class="room-box">
+                <div class="room-image">
+                    <img src="/static/room3.webp" alt="Suite">
+                </div>
+                <div class="room-info">
+                    <h2>Suite</h2>
+                    <p>Max People: 4</p>
+                    <p class="price">$200/night</p>
+                    <button onclick="bookRoom('suite')">Book Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Updates login/logout button visibility based on login state
+        function updateNavButtons() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            document.getElementById('loginBtn').style.display = isLoggedIn ? 'none' : 'block';
+            document.getElementById('logoutBtn').style.display = isLoggedIn ? 'block' : 'none';
+        }
+
+        // Redirects to login page
+        function handleLogin() {
+            window.location.href = '/login';
+        }
+
+        // Handles user logout
+        function handleLogout() {
+            // Clear user data and redirect to home
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            updateNavButtons();
+            window.location.href = '/';
+        }
+
+        // Check login status on page load
+        document.addEventListener('DOMContentLoaded', updateNavButtons);
+
+        // Handles room booking process
+        function bookRoom(type) {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            
+            if (!isLoggedIn) {
+                localStorage.setItem('bookingRedirect', '/checkout');
+                window.location.href = '/login';
+                return;
+            }
+            // Store selected room before redirect
+            localStorage.setItem('selectedRoom', type);
+            window.location.href = '/checkout';
+        }
+    </script>
+</body>
+</html>
