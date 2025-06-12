@@ -33,8 +33,9 @@ def checkout():
     # Render the checkout.html template
     if request.method == 'POST':
         booking = create_booking()
-        if booking:
-            # If booking is successful, redirect to home page
+        if booking[1] == 400:
+            return redirect('/checkout')
+        else:
             return redirect('/rooms')
     return render_template('checkout.html')
 

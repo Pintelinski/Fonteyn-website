@@ -7,6 +7,9 @@ from functools import wraps
 from config import CONFIG
 import mysql.connector
 from datetime import datetime, timedelta
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 DB_HOST = "127.0.0.1" #"host.docker.internal"
 DB_PORT = "3306"
@@ -91,7 +94,7 @@ def create_booking():
     current_datetime = datetime.now()
     input_datetime = datetime.strptime(date, '%Y-%m-%d')
     if input_datetime < current_datetime:
-        return "Date and time cannot be in the past!", 400
+        return "The date you entered is in the past!", 400
     
     if roomType == 'single' and people > 1:
             return "Unfortunately, the single accomodation only suits 1 person!", 400
@@ -111,6 +114,7 @@ def create_booking():
             INSERT INTO bookings (park, name, email, start_date, end_date, people, room_type)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
+    mail(park, name, email, date, end_date, people, roomType)
     cursor = conn.cursor()
     cursor.execute(INSERT_BOOKING, (park, name, email, date, end_date, people, roomType))
     conn.commit()
@@ -168,3 +172,24 @@ def register():
         return jsonify({'error': 'Failed to register user'}), 500
     finally:
         cursor.close()
+
+def mail(park, name, email, start_date, end_date, people, roomType):      
+    FROM = 'agenda.mailservice@gmail.com'
+    TO = email
+
+    SUBJECT = f"Your booking at Fonteyn Holiday Parks"
+    TEXT = f"Dear {name}, \n\nYou have made a booking at Fonteyn Holiday Parks\n - Your booking has been confirmed at: {start_date}\n - Your stay is till {end_date}.\n - You have booked a {roomType} type room for {people} person(s).\n - The park you have chosen is: {park}.\n\nThank you for choosing Fonteyn Holiday Parks! \n\nBest regards,\nFonteyn Holiday Parks Team"
+
+    msg = MIMEMultipart()
+    msg['From'] = FROM
+    msg['To'] = TO
+    msg['Subject'] = SUBJECT
+
+    msg.attach(MIMEText(TEXT, 'plain'))
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login('agenda.mailservice@gmail.com', 'tbmy zjot irka laht')
+            server.sendmail(FROM, TO, msg.as_string())  
+            print(f"Email sent to {TO} successfully.")
+    except smtplib.SMTPException as e:
+        print(f"Failed to send email to {TO}: {e}") 
