@@ -1,59 +1,36 @@
 version: '3'
 
 services:
-  database:
-    build:
-      context: .
-      dockerfile: Dockerfile.db
-    volumes:
-      - db-data:/app/data
-    environment:
-      - DATABASE_NAME=/app/data/hotel.db
-    networks:
-      - hotel-network
-    #healthcheck to verify database is ready
-    healthcheck:
-      test: ["CMD", "test", "-f", "/app/data/db_ready"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   api:
     build:
       context: .
       dockerfile: Dockerfile.api
     ports:
-      - "88:88"
-    depends_on:
-      database:
-        condition: service_healthy # wait for database to be healthy
-    volumes:
-      - db-data:/app/data:ro
-    environment:
-      - DATABASE_NAME=/app/data/hotel.db
+      - "5000:5000"
     networks:
       - hotel-network
 
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.app
     ports:
       - "8080:8080"
     depends_on:
       api:
         condition: service_started # wait for API to be started
     environment:
-      - DATABASE_NAME=/app/data/hotel.db
-      - API_URL=http://api:88/api
+      - API_URL=http://api:5000/api
+      - DB_HOST=host.docker.internal
+      - DB_PORT=3306
+      - DB_USER=webapp_user
+      - DB_PASSWORD=Admin123!
+      - DB_NAME=fonteyn_database
     networks:
       - hotel-network
-    volumes:
-      - db-data:/app/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
   hotel-network:  #it is a custom bridge network to allow communication between containers
     driver: bridge
-
-volumes:
-  db-data: #a named volume that persists database files also when the containers are stopped

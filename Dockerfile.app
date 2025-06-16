@@ -7,6 +7,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 8080
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "api_server:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]

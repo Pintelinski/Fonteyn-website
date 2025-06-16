@@ -11,7 +11,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-DB_HOST = "127.0.0.1" #"host.docker.internal"
+DB_HOST = "host.docker.internal"
 DB_PORT = "3306"
 DB_USER = "webapp_user"
 DB_PASSWORD = "Admin123!"  

@@ -55,14 +55,15 @@ def curl_request(url):
         }, 400
 
 # Main entry point of the application
-if __name__ == '__main__':
+"""if __name__ == '__main__':
     # Create static directory if it doesn't exist
     if not os.path.exists('static'):
         os.makedirs('static')
     
     # Start the Flask application with configuration from CONFIG
     app.run(
-        host=CONFIG['server']['listen_ip'],      # IP address to listen on
+        host='host.docker.internal',      # IP address to listen on
         port=int(CONFIG['server']['port']),      # Port number to use
         debug=CONFIG['server'].getboolean('debug')  # Debug mode setting
     )
+    """
